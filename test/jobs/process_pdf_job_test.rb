@@ -119,6 +119,37 @@ class ProcessPdfJobTest < ActiveJob::TestCase
     assert_equal "complete", @import.reload.status
   end
 
+  test "extracts transactions from investment statement PDF" do
+    pdf_content = attach_pdf!(@import)
+    process_result = Struct.new(:document_type).new("investment_statement")
+
+    @import.expects(:process_with_ai).once.returns(process_result)
+    @import.expects(:extract_transactions).once do
+      @import.update!(
+        extracted_data: {
+          "transactions" => [
+            {
+              "date" => "2024-01-01",
+              "amount" => "10.00",
+              "name" => "Coffee Shop"
+            }
+          ]
+        }
+      )
+    end
+    @import.expects(:sync_mappings).once
+    @import.stubs(:send_next_steps_email)
+
+    @family.expects(:upload_document).with do |file_content:, filename:, metadata:|
+      assert_equal pdf_content, file_content
+      assert_equal "sample_bank_statement.pdf", filename
+      assert_equal({ "type" => "investment_statement" }, metadata)
+      true
+    end.returns(family_documents(:tax_return))
+
+    ProcessPdfJob.perform_now(@import)
+  end
+
   test "discards permanently and marks failed on Provider::Error" do
     attach_pdf!(@import)
     @import.expects(:process_with_ai).once.raises(Provider::Error, "Could not convert PDF to images")

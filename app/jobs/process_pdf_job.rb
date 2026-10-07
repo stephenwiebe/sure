@@ -86,7 +86,7 @@ class ProcessPdfJob < ApplicationJob
     end
 
     def statement_with_transactions?(document_type)
-      document_type.in?(%w[bank_statement credit_card_statement])
+      document_type.in?(Import::TRANSACTION_DOCUMENT_TYPES)
     end
 
     def reset_processing_claim(pdf_import)
