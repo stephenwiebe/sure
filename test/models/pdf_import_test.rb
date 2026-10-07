@@ -64,6 +64,20 @@ class PdfImportTest < ActiveSupport::TestCase
     assert_not @import_with_rows.cleaned_from_validation_stats?(invalid_rows_count: 0)
   end
 
+  test "statement_with_transactions? includes investment statements" do
+    @import.document_type = "bank_statement"
+    assert @import.statement_with_transactions?
+
+    @import.document_type = "credit_card_statement"
+    assert @import.statement_with_transactions?
+
+    @import.document_type = "investment_statement"
+    assert @import.statement_with_transactions?
+
+    @import.document_type = "financial_document"
+    assert_not @import.statement_with_transactions?
+  end
+
   test "column_keys returns transaction columns" do
     assert_equal %i[date amount name category notes], @import.column_keys
   end

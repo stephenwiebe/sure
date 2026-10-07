@@ -198,7 +198,7 @@ class Provider::Openai::BankStatementExtractor
         Extract bank statement data as JSON. Return:
         {"bank_name":"...","account_holder":"...","account_number":"last 4 digits","statement_period":{"start_date":"YYYY-MM-DD","end_date":"YYYY-MM-DD"},"opening_balance":0.00,"closing_balance":0.00,"transactions":[{"date":"YYYY-MM-DD","description":"...","amount":-0.00}]}
 
-        Rules: Negative amounts for debits/expenses, positive for credits/deposits. Dates as YYYY-MM-DD. Extract ALL transactions. JSON only, no markdown.
+        Rules: Negative amounts for debits/expenses, positive for credits/deposits. Dates as YYYY-MM-DD. Extract ALL dated cash transactions (deposits, withdrawals, interest, dividends, fees). Do NOT turn holdings tables, positions, or balance summaries into transactions. JSON only, no markdown.
       INSTRUCTIONS
     end
 
@@ -207,7 +207,7 @@ class Provider::Openai::BankStatementExtractor
         Extract transactions from bank statement text as JSON. Return:
         {"transactions":[{"date":"YYYY-MM-DD","description":"...","amount":-0.00}]}
 
-        Rules: Negative amounts for debits/expenses, positive for credits/deposits. Dates as YYYY-MM-DD. Extract ALL transactions. JSON only, no markdown.
+        Rules: Negative amounts for debits/expenses, positive for credits/deposits. Dates as YYYY-MM-DD. Extract ALL dated cash transactions (deposits, withdrawals, interest, dividends, fees). Do NOT turn holdings tables, positions, or balance summaries into transactions. JSON only, no markdown.
       INSTRUCTIONS
     end
 end

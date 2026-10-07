@@ -39,6 +39,11 @@ class Import < ApplicationRecord
 
   DOCUMENT_TYPES = %w[bank_statement credit_card_statement investment_statement financial_document contract other].freeze
 
+  # Document types whose transaction history is extracted into importable rows.
+  # Investment statements are included because combined statements (e.g. a bank's
+  # portfolio statement) carry a checking/transaction section alongside brokerage pages.
+  TRANSACTION_DOCUMENT_TYPES = %w[bank_statement credit_card_statement investment_statement].freeze
+
   TYPES = %w[TransactionImport TradeImport AccountImport MintImport ActualImport YnabImport CategoryImport RuleImport MerchantImport PdfImport QifImport SureImport].freeze
   SIGNAGE_CONVENTIONS = %w[inflows_positive inflows_negative]
   SEPARATORS = [ [ "Comma (,)", "," ], [ "Semicolon (;)", ";" ] ].freeze

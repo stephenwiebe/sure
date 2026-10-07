@@ -135,6 +135,10 @@ class Provider::Anthropic::BankStatementExtractor
 
         Rules:
           - Extract EVERY transaction in document order
+          - A document may combine a bank/checking section with brokerage or
+            investment pages. Extract only the dated cash transactions
+            (deposits, withdrawals, interest, dividends, fees). Do NOT turn
+            holdings tables, positions, or balance summaries into transactions.
           - Negative amounts for debits / expenses, positive for credits / deposits
           - Dates in YYYY-MM-DD
           - Use null for any field you cannot read; do not invent values
